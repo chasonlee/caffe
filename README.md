@@ -1,3 +1,7 @@
+# Modifications
+- [x] Change to python3 version
+- [x] Support CTPN Layers(Reverse, Transpose, Lstm)
+
 # Caffe
 
 [![Build Status](https://travis-ci.org/BVLC/caffe.svg?branch=master)](https://travis-ci.org/BVLC/caffe)
