@@ -186,14 +186,13 @@ class Transformer:
 
     def set_transpose(self, in_, order):
         """
-        Set the order of dimensions, e.g. to convert OpenCV's HxWxC images
-        into CxHxW.
+        Set the input channel order for e.g. RGB to BGR conversion
+        as needed for the reference ImageNet model.
 
         Parameters
         ----------
-        in_ : which input to assign this dimension order
+        in_ : which input to assign this channel order
         order : the order to transpose the dimensions
-            for example (2,0,1) changes HxWxC into CxHxW and (1,2,0) reverts
         """
         self.__check_input(in_)
         if len(order) != len(self.inputs[in_]) - 1:
@@ -257,12 +256,7 @@ class Transformer:
             if len(ms) != 3:
                 raise ValueError('Mean shape invalid')
             if ms != self.inputs[in_][1:]:
-                in_shape = self.inputs[in_][1:]
-                m_min, m_max = mean.min(), mean.max()
-                normal_mean = (mean - m_min) / (m_max - m_min)
-                mean = resize_image(normal_mean.transpose((1,2,0)),
-                        in_shape[1:]).transpose((2,0,1)) * \
-                        (m_max - m_min) + m_min
+                raise ValueError('Mean shape incompatible with input shape.')
         self.mean[in_] = mean
 
     def set_input_scale(self, in_, scale):
@@ -329,7 +323,7 @@ def resize_image(im, new_dims, interp_order=1):
             # skimage is fast but only understands {1,3} channel images
             # in [0, 1].
             im_std = (im - im_min) / (im_max - im_min)
-            resized_std = resize(im_std, new_dims, order=interp_order, mode='constant')
+            resized_std = resize(im_std, new_dims, order=interp_order)
             resized_im = resized_std * (im_max - im_min) + im_min
         else:
             # the image is a constant -- avoid divide by 0

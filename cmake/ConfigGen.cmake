@@ -24,18 +24,6 @@ function(caffe_generate_export_configs)
     set(HAVE_CUDA FALSE)
   endif()
 
-  set(HDF5_IMPORTED OFF)
-  foreach(_lib ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES})
-    if(TARGET ${_lib})
-      set(HDF5_IMPORTED ON)
-    endif()
-  endforeach()
-
-  # This code is taken from https://github.com/sh1r0/caffe-android-lib
-  if(USE_HDF5)
-    list(APPEND Caffe_DEFINITIONS -DUSE_HDF5)
-  endif()
-
   if(NOT HAVE_CUDNN)
     set(HAVE_CUDNN FALSE)
   endif()
@@ -45,7 +33,7 @@ function(caffe_generate_export_configs)
   configure_file("cmake/Templates/CaffeConfig.cmake.in" "${PROJECT_BINARY_DIR}/CaffeConfig.cmake" @ONLY)
 
   # Add targets to the build-tree export set
-  export(TARGETS caffe caffeproto FILE "${PROJECT_BINARY_DIR}/CaffeTargets.cmake")
+  export(TARGETS caffe proto FILE "${PROJECT_BINARY_DIR}/CaffeTargets.cmake")
   export(PACKAGE Caffe)
 
   # ---[ Configure install-tree CaffeConfig.cmake file ]---

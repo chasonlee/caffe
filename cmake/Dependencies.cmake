@@ -5,7 +5,7 @@ set(Caffe_DEFINITIONS "")
 set(Caffe_COMPILE_OPTIONS "")
 
 # ---[ Boost
-find_package(Boost 1.54 REQUIRED COMPONENTS system thread filesystem)
+find_package(Boost 1.55 REQUIRED COMPONENTS system thread filesystem)
 list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${Boost_INCLUDE_DIRS})
 list(APPEND Caffe_LINKER_LIBS PUBLIC ${Boost_LIBRARIES})
 
@@ -46,14 +46,6 @@ include(cmake/ProtoBuf.cmake)
 find_package(HDF5 COMPONENTS HL REQUIRED)
 list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${HDF5_INCLUDE_DIRS})
 list(APPEND Caffe_LINKER_LIBS PUBLIC ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES})
-
-# This code is taken from https://github.com/sh1r0/caffe-android-lib
-if(USE_HDF5)
-  find_package(HDF5 COMPONENTS HL REQUIRED)
-  include_directories(SYSTEM ${HDF5_INCLUDE_DIRS} ${HDF5_HL_INCLUDE_DIR})
-  list(APPEND Caffe_LINKER_LIBS ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES})
-  add_definitions(-DUSE_HDF5)
-endif()
 
 # ---[ LMDB
 if(USE_LMDB)
